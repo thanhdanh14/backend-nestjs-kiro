@@ -35,6 +35,8 @@ export class MailService {
     });
   }
 
+
+
   async sendVerificationEmail(email: string, token: string) {
     const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
     
@@ -79,5 +81,35 @@ export class MailService {
     });
     
     console.log('✅ OTP email sent successfully!');
+  }
+
+  async sendPasswordChangedEmail(email: string, name: string, ipAddress?: string) {
+    console.log('📧 Sending password changed email to:', email);
+    
+    const changeTime = new Date().toLocaleString('vi-VN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Asia/Ho_Chi_Minh',
+    });
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: '✅ Mật khẩu của bạn đã được thay đổi',
+      template: './password-changed',
+      context: {
+        name: name,
+        email: email,
+        changeTime: changeTime,
+        ipAddress: ipAddress || 'Không xác định',
+        loginUrl: `${process.env.FRONTEND_URL || 'http://localhost:3001'}/login`,
+        year: new Date().getFullYear(),
+      },
+    });
+    
+    console.log('✅ Password changed email sent successfully!');
   }
 }

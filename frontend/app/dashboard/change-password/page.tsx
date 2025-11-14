@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { Form, Input, Button, Card, message, Typography } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import axiosInstance from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 const { Title, Text } = Typography;
 
 export default function ChangePasswordPage() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [form] = Form.useForm();
 
   const onFinish = async (values: any) => {
@@ -20,6 +22,7 @@ export default function ChangePasswordPage() {
       });
       message.success('Đổi mật khẩu thành công!');
       form.resetFields();
+      router.push(`/dashboard`);
     } catch (error: any) {
       message.error(error.response?.data?.message || 'Đổi mật khẩu thất bại!');
     } finally {

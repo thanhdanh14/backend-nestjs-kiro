@@ -87,6 +87,17 @@ export class AuthService implements IAuthService {
       password: hashedNewPassword,
     });
     
+    // Gửi email thông báo đổi mật khẩu thành công
+    try {
+      await this.mailService.sendPasswordChangedEmail(
+        currentUser.email,
+        currentUser.name,
+      );
+    } catch (error) {
+      console.error('Lỗi khi gửi email thông báo:', error);
+      // Không throw error để không ảnh hưởng đến quá trình đổi mật khẩu
+    }
+    
     return {
       message: 'Đổi mật khẩu thành công',
     };
